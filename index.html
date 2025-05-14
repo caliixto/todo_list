@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('fondo.jpg'); /* Cambia por la imagen que quieras */
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    header {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .btn {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .contenido {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 3rem;
+    }
+  </style>
+</head>
+<body class="index">
+  <header>
+    <a href="registro.html" class="btn">Registrarse</a>
+    <a href="inicio_sesion.html" class="btn">Iniciar Sesión</a>
+  </header>
+
+  <div class="contenido">
+    <h1>Bienvenido a Mi Aplicación TODO</h1>
+  </div>
+</body>
+</html>
