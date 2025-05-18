@@ -79,11 +79,14 @@ function Inicio_Sesion(){
     return;
   }
 
-  window.location.href = "todoList.html";
+ localStorage.setItem("usuario-nombre", usuario);
+
 
   alert(`Bienvenido, ${usuarioObj.nombre}`);
 
  
+  window.location.href = "todoList.html";
+
 });
 
 }

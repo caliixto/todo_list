@@ -1,0 +1,38 @@
+body {
+  font-family: sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  padding: 20px;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+main {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.calendario, .todo-list {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1 1 300px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+button {
+  padding: 10px;
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

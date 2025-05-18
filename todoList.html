@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Panel</title>
+  <link rel="stylesheet" href="todo-list.css">
 </head>
 <body>
-    <h1>ESTAS DENTRO DEL TODO LIST</h1>
+  <header>
+    <h1>Bienvenido, <span id="usuario-nombre"></span></h1>
+    <p>Ciudad: <span id="ciudad"></span> | Día: <span id="dia-semana"></span></p>
+  </header>
+
+  <main>
+    <section class="calendario">
+      <h2>Calendario</h2>
+      <input type="date" id="seleccion-calendario" />
+    </section>
+
+    <section class="todo-list">
+      <h2>Mis Tareas</h2>
+      <ul id="lista-tareas"></ul>
+      <input type="text" id="nueva-tarea" placeholder="Nueva tarea..." />
+      <button onclick="agregarTarea()">Agregar</button>
+    </section>
+  </main>
+
+  <script src="todoList.js"></script>
 </body>
 </html>
