@@ -1,11 +1,16 @@
-'use strict'
+'use strict';
 
 document.addEventListener("DOMContentLoaded", () => {
   mostrarNombreUsuario();
   mostrarDiaSemana();
   obtenerUbicacion();
   cargarTareas();
+  establecerFechaMinima();
 });
+
+// ------------------------
+// Funciones Generales
+// ------------------------
 
 function mostrarNombreUsuario() {
   const usuarioLogueado = localStorage.getItem("usuario-nombre");
@@ -14,7 +19,6 @@ function mostrarNombreUsuario() {
     window.location.href = "inicio_sesion.html";
     return;
   }
-
   const datos = JSON.parse(localStorage.getItem(usuarioLogueado));
   document.getElementById("usuario-nombre").textContent = datos.nombre;
 }
@@ -27,56 +31,35 @@ function mostrarDiaSemana() {
 }
 
 function obtenerUbicacion() {
-  fetch('https://ipinfo.io/json?token=TU_TOKEN_AQUI') // <-- reemplaza TU_TOKEN_AQUI
-    .then(response => response.json())
-    .then(data => {
-      const ciudad = data.city;
-      const pais = data.country;
-      document.getElementById("ciudad").textContent = `${ciudad}, ${pais}`;
-    })
-    .catch(error => {
-      console.error("Error al obtener la ubicación:", error);
-      document.getElementById("ciudad").textContent = "Ubicación no disponible";
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      try {
+        const respuesta = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+        );
+        const data = await respuesta.json();
+        const direccion = data.address;
+        const ciudad = direccion.city || direccion.town || direccion.village || direccion.hamlet || direccion.state || "No disponible";
+        document.getElementById("ciudad").textContent = ciudad;
+      } catch {
+        document.getElementById("ciudad").textContent = "No disponible";
+      }
+    }, () => {
+      document.getElementById("ciudad").textContent = "Ubicación denegada";
     });
-
-
-if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const { latitude, longitude } = pos.coords;
-    try {
-      const respuesta = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-      );
-      const data = await respuesta.json();
-      
-      // Asegurarse de revisar varias opciones
-      const direccion = data.address;
-      const ciudad =
-        direccion.city ||
-        direccion.town ||
-        direccion.village ||
-        direccion.hamlet ||
-        direccion.state ||
-        "No disponible";
-
-      document.getElementById("ciudad").textContent = ciudad;
-    } catch (error) {
-      console.error("Error al obtener la ciudad:", error);
-      document.getElementById("ciudad").textContent = "No disponible";
-    }
-  }, () => {
-    document.getElementById("ciudad").textContent = "Ubicación denegada";
-  });
-} else {
-  document.getElementById("ciudad").textContent = "Geolocalización no soportada";
+  } else {
+    document.getElementById("ciudad").textContent = "Geolocalización no soportada";
+  }
 }
 
-
-
+function establecerFechaMinima() {
+  const hoy = new Date().toISOString().split("T")[0];
+  document.getElementById("seleccion-calendario").setAttribute("min", hoy);
 }
 
 // ------------------------
-// TODO LIST
+// TODO List
 // ------------------------
 
 function agregarTarea() {
@@ -84,56 +67,102 @@ function agregarTarea() {
   const tareaTexto = input.value.trim();
   const fecha = document.getElementById("seleccion-calendario").value;
 
-  if (!tareaTexto) return;
+  if (!tareaTexto) {
+    alert("Escribe una tarea antes de agregar.");
+    return;
+  }
 
-  const tareaItem = document.createElement("li");
-  tareaItem.textContent = fecha ? `${tareaTexto} (📅 ${fecha})` : tareaTexto;
+  if (!fecha) {
+    alert("Selecciona una fecha válida antes de agregar la tarea.");
+    return;
+  }
 
   const usuario = localStorage.getItem("usuario-nombre");
   const claveTareas = `tareas_${usuario}`;
-
   const tareasGuardadas = JSON.parse(localStorage.getItem(claveTareas)) || [];
-  tareasGuardadas.push(tareaTexto);
+
+  const nuevaTarea = { texto: tareaTexto, fecha: fecha };
+  tareasGuardadas.push(nuevaTarea);
   localStorage.setItem(claveTareas, JSON.stringify(tareasGuardadas));
 
-  mostrarTareaEnLista(tareaTexto);
   input.value = "";
-}
-
-function mostrarTareaEnLista(tareaTexto) {
-  const lista = document.getElementById("lista-tareas");
-
-  const li = document.createElement("li");
-  li.textContent = tareaTexto;
-
-  // Botón eliminar
-  const btn = document.createElement("button");
-  btn.textContent = "❌";
-  btn.onclick = () => {
-    eliminarTarea(tareaTexto);
-    li.remove();
-  };
-
-  li.appendChild(btn);
-  lista.appendChild(li);
+  cargarTareas(); // recargar lista agrupada
 }
 
 function cargarTareas() {
+  const lista = document.getElementById("lista-tareas");
+  lista.innerHTML = ""; // limpiar
+
   const usuario = localStorage.getItem("usuario-nombre");
   const claveTareas = `tareas_${usuario}`;
-  const tareasGuardadas = JSON.parse(localStorage.getItem(claveTareas)) || [];
+  const tareas = JSON.parse(localStorage.getItem(claveTareas)) || [];
 
-  tareasGuardadas.forEach(tarea => {
-    mostrarTareaEnLista(tarea);
+  const agrupadas = agruparPorFecha(tareas);
+
+  Object.keys(agrupadas).sort().forEach(fecha => {
+    const fechaTitulo = document.createElement("h3");
+    fechaTitulo.textContent = getEtiquetaFecha(fecha);
+    lista.appendChild(fechaTitulo);
+
+    agrupadas[fecha].forEach(tarea => {
+      const li = document.createElement("li");
+      li.classList.add(getClaseFecha(fecha));
+      li.textContent = tarea.texto;
+
+      const btn = document.createElement("button");
+      btn.textContent = "❌";
+      btn.onclick = () => {
+        eliminarTarea(tarea);
+        cargarTareas();
+      };
+
+      li.appendChild(btn);
+      lista.appendChild(li);
+    });
   });
 }
 
-function eliminarTarea(tareaTexto) {
+function eliminarTarea(tareaAEliminar) {
   const usuario = localStorage.getItem("usuario-nombre");
   const claveTareas = `tareas_${usuario}`;
   let tareas = JSON.parse(localStorage.getItem(claveTareas)) || [];
 
-  tareas = tareas.filter(t => t !== tareaTexto);
+  tareas = tareas.filter(t => !(t.texto === tareaAEliminar.texto && t.fecha === tareaAEliminar.fecha));
   localStorage.setItem(claveTareas, JSON.stringify(tareas));
 }
 
+// ------------------------
+// Utilidades
+// ------------------------
+
+function agruparPorFecha(tareas) {
+  return tareas.reduce((acc, tarea) => {
+    if (!acc[tarea.fecha]) acc[tarea.fecha] = [];
+    acc[tarea.fecha].push(tarea);
+    return acc;
+  }, {});
+}
+
+function getEtiquetaFecha(fecha) {
+  const hoy = new Date();
+  const fechaTarea = new Date(fecha);
+  const diff = (fechaTarea - hoy) / (1000 * 60 * 60 * 24);
+  const dias = Math.floor(diff);
+
+  if (dias < 0) return `📅 ${fecha} (Pasada)`;
+  if (dias === 0) return "📅 Hoy";
+  if (dias === 1) return "📅 Mañana";
+  return `📅 ${fecha}`;
+}
+
+function getClaseFecha(fecha) {
+  const hoy = new Date();
+  const fechaTarea = new Date(fecha);
+  const diff = (fechaTarea - hoy) / (1000 * 60 * 60 * 24);
+  const dias = Math.floor(diff);
+
+  if (dias < 0) return "pasada";
+  if (dias === 0) return "hoy";
+  if (dias === 1) return "maniana";
+  return "futura";
+}

@@ -1,5 +1,5 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   background: #f0f2f5;
   margin: 0;
   padding: 20px;
@@ -27,12 +27,89 @@ main {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+h2 {
+  margin-top: 0;
+}
+
 button {
-  padding: 10px;
+  padding: 10px 15px;
   margin-top: 10px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.tarea-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#nueva-tarea {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+ul#lista-tareas {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+ul#lista-tareas li {
+  background-color: #f9f9f9;
+  border-left: 4px solid #007bff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+ul#lista-tareas li:hover {
+  transform: scale(1.02);
+}
+
+ul#lista-tareas button {
+  background: #ff4d4d;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+ul#lista-tareas button:hover {
+  background: #cc0000;
+}
+
+/* Etiquetas de fecha */
+h3 {
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Tareas clasificadas */
+li.hoy {
+  border-left: 4px solid #28a745;
+}
+li.maniana {
+  border-left: 4px solid #ffc107;
+}
+li.futura {
+  border-left: 4px solid #17a2b8;
+}
+li.pasada {
+  border-left: 4px solid #dc3545;
+  text-decoration: line-through;
+  opacity: 0.6;
 }
