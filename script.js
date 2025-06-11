@@ -3,53 +3,66 @@
 
 window.addEventListener('load', ()=>{
  
-function Registro(){
-
+function Registro() {
   const formulario = document.querySelector(".formulario");
+  if (!formulario) return;
 
-   if (!formulario) return;
+  formulario.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-  formulario.addEventListener("submit", function(event){
-     event.preventDefault();
+    const nombre = document.getElementById("nombre").value.trim();
+    const apellidos = document.getElementById("apellidos").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const usuario = document.getElementById("usuario").value.trim();
+    const contra = document.getElementById("contrasena").value;
+    const confirmar = document.getElementById("confirmar").value;
 
-   const nombre = document.getElementById("nombre").value;
-   const apellidos = document.getElementById("apellidos").value;
-   const email= document.getElementById("email").value;
-   const usuario = document.getElementById('usuario').value;
-   const contra= document.getElementById("contrasena").value;
-   const confirmar = document.getElementById("confirmar").value;
+    // 🧪 Validaciones con regex
+    if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]+$/.test(nombre)) {
+      alert("El nombre solo debe contener letras");
+      return;
+    }
 
+    if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]+$/.test(apellidos)) {
+      alert("Los apellidos solo deben contener letras");
+      return;
+    }
 
-   if(contra !== confirmar){
-    alert("Las contraseñas no coinciden");
-    return;
-   }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert("Correo electrónico no válido");
+      return;
+    }
 
-   const nuevoUsuario = {
-    nombre,
-    apellidos,
-    email,
-    usuario,
-    contra,
-    confirmar
-   };
+    if (!/^[a-zA-Z0-9_]{4,16}$/.test(usuario)) {
+      alert("El nombre de usuario debe tener entre 4 y 16 caracteres alfanuméricos");
+      return;
+    }
 
-   // Guardamos  el nombre de usuarios como clave
-  localStorage.setItem(usuario, JSON.stringify(nuevoUsuario));
+    if (contra.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
 
-  alert("Usuario registrado correctamente");
+    if (contra !== confirmar) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
 
-  window.location.href = "inicio_sesion.html";
+    const nuevoUsuario = {
+      nombre,
+      apellidos,
+      email,
+      usuario,
+      contra
+    };
 
+    localStorage.setItem(usuario, JSON.stringify(nuevoUsuario));
+    alert("Usuario registrado correctamente");
+    formulario.reset();
+    window.location.href = "inicio_sesion.html";
+  });
+}
 
-
-formulario.reset();
-
-  })
-
-
-   
-};
 
 function Inicio_Sesion(){
 
