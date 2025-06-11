@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   obtenerUbicacion();
   cargarTareas();
   establecerFechaMinima();
+  inicializarModoOscuro();
 });
 
 // ------------------------
@@ -39,6 +40,7 @@ function obtenerUbicacion() {
           `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
         );
         const data = await respuesta.json();
+        console.log(data);
         const direccion = data.address;
         const ciudad = direccion.city || direccion.town || direccion.village || direccion.hamlet || direccion.state || "No disponible";
         document.getElementById("ciudad").textContent = ciudad;
@@ -165,4 +167,22 @@ function getClaseFecha(fecha) {
   if (dias === 0) return "hoy";
   if (dias === 1) return "maniana";
   return "futura";
+}
+
+
+function inicializarModoOscuro() {
+  const boton = document.getElementById("toggle-darkmode");
+  const body = document.body;
+
+  // Si ya hay preferencia guardada
+  if (localStorage.getItem("modo-oscuro") === "true") {
+    body.classList.add("darkmode");
+    boton.textContent = "☀️ Modo Claro";
+  }
+
+  boton.addEventListener("click", () => {
+    const oscuro = body.classList.toggle("darkmode");
+    boton.textContent = oscuro ? "☀️" : "🌙 ";
+    localStorage.setItem("modo-oscuro", oscuro);
+  });
 }

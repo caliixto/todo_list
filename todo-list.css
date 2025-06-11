@@ -113,3 +113,58 @@ li.pasada {
   text-decoration: line-through;
   opacity: 0.6;
 }
+
+
+/*MODO OSCURO*/
+
+/* Estilo general del modo oscuro */
+body.darkmode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* Botones */
+body.darkmode button {
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #666;
+}
+
+/* Lista de tareas */
+body.darkmode #lista-tareas li {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 5px;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Botón de eliminar dentro del li */
+body.darkmode #lista-tareas li button {
+  background-color: transparent;
+  color: #ff8080;
+  border: none;
+  cursor: pointer;
+}
+
+/* Entradas y fecha */
+body.darkmode input,
+body.darkmode select,
+body.darkmode textarea {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+#toggle-darkmode{
+float: right;
+background-color: #121212;
+position: relative;
+bottom: 10px;
+}
+/* Puedes personalizar según tus elementos */
