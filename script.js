@@ -91,6 +91,8 @@ function Inicio_Sesion(){
     return;
   }
 
+  window.location.href = "registro.html";
+
   const usuarioObj = JSON.parse(datosGuardados);
 
   if (usuarioObj.contra !== contra) {
