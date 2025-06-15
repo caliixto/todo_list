@@ -88,10 +88,9 @@ function Inicio_Sesion(){
 
   if (!datosGuardados) {
     alert("Usuario no encontrado");
-    return;
+    window.location.href = "registro.html";
   }
 
-  window.location.href = "registro.html";
 
   const usuarioObj = JSON.parse(datosGuardados);
 
