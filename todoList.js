@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarTareas();
   establecerFechaMinima();
   inicializarModoOscuro();
+
+  document.getElementById("cerrar-sesion").addEventListener("click", () => {
+  localStorage.removeItem("usuario-nombre");
+  window.location.href = "inicio_sesion.html";
+});
+
 });
 
 // ------------------------
@@ -92,46 +98,50 @@ function agregarTarea() {
 }
 
 function cargarTareas() {
-  const lista = document.getElementById("lista-tareas");
-  lista.innerHTML = ""; // limpiar
-
   const usuario = localStorage.getItem("usuario-nombre");
   const claveTareas = `tareas_${usuario}`;
   const tareas = JSON.parse(localStorage.getItem(claveTareas)) || [];
 
-  const agrupadas = agruparPorFecha(tareas);
+  const lista = document.getElementById("lista-tareas");
+  lista.innerHTML = "";
 
-  Object.keys(agrupadas).sort().forEach(fecha => {
-    const fechaTitulo = document.createElement("h3");
-    fechaTitulo.textContent = getEtiquetaFecha(fecha);
-    lista.appendChild(fechaTitulo);
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
 
-    agrupadas[fecha].forEach(tarea => {
-      const li = document.createElement("li");
-      li.classList.add(getClaseFecha(fecha));
-      li.textContent = tarea.texto;
+  tareas.forEach((tarea, index) => {
+    const li = document.createElement("li");
+    const fechaTarea = new Date(tarea.fecha);
+    fechaTarea.setHours(0, 0, 0, 0);
 
-      const btn = document.createElement("button");
-      btn.textContent = "❌";
-      btn.onclick = () => {
-        eliminarTarea(tarea);
-        cargarTareas();
-      };
+    const diferencia = (fechaTarea - hoy) / (1000 * 60 * 60 * 24);
 
-      li.appendChild(btn);
-      lista.appendChild(li);
-    });
+    if (diferencia < 0) li.classList.add("pasada");
+    else if (diferencia === 0) li.classList.add("hoy");
+    else if (diferencia === 1) li.classList.add("maniana");
+    else li.classList.add("futura");
+
+    li.textContent = `${tarea.texto} (${tarea.fecha})`;
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "X";
+    btnEliminar.onclick = () => eliminarTarea(index);
+    li.appendChild(btnEliminar);
+
+    lista.appendChild(li);
   });
 }
 
-function eliminarTarea(tareaAEliminar) {
+
+function eliminarTarea(index) {
   const usuario = localStorage.getItem("usuario-nombre");
   const claveTareas = `tareas_${usuario}`;
-  let tareas = JSON.parse(localStorage.getItem(claveTareas)) || [];
+  const tareas = JSON.parse(localStorage.getItem(claveTareas)) || [];
 
-  tareas = tareas.filter(t => !(t.texto === tareaAEliminar.texto && t.fecha === tareaAEliminar.fecha));
+  tareas.splice(index, 1);
   localStorage.setItem(claveTareas, JSON.stringify(tareas));
+  cargarTareas();
 }
+
 
 // ------------------------
 // Utilidades

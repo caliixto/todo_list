@@ -56,6 +56,12 @@ function Registro() {
       contra
     };
 
+    if (localStorage.getItem(usuario)) {
+    alert("El nombre de usuario ya está registrado. Elige otro.");
+    return;
+    }
+
+
     localStorage.setItem(usuario, JSON.stringify(nuevoUsuario));
     alert("Usuario registrado correctamente");
     formulario.reset();
