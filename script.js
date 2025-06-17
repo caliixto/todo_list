@@ -18,6 +18,14 @@ function Registro() {
     const confirmar = document.getElementById("confirmar").value;
 
     // 🧪 Validaciones con regex
+
+
+    if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/.test(contra)) {
+       alert("La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula y un número.");
+        return;
+    }
+
+
     if (!/^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]+$/.test(nombre)) {
       alert("El nombre solo debe contener letras");
       return;
@@ -35,11 +43,6 @@ function Registro() {
 
     if (!/^[a-zA-Z0-9_]{4,16}$/.test(usuario)) {
       alert("El nombre de usuario debe tener entre 4 y 16 caracteres alfanuméricos");
-      return;
-    }
-
-    if (contra.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres");
       return;
     }
 
