@@ -3,12 +3,10 @@ body {
   background: #f0f2f5;
   margin: 0;
   padding: 20px;
-  background-image: url(./estrellas.jpg);
-  background-size: cover;
-  background-position: center; 
-  background-repeat: no-repeat;
   height: 100vh;
 }
+
+
 
 header {
   background-color: #007bff;
@@ -166,10 +164,64 @@ body.darkmode textarea {
   border: 1px solid #555;
 }
 
-#toggle-darkmode{
-float: right;
-background-color: #121212;
-position: relative;
-bottom: 10px;
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: #007bff;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
-/* Puedes personalizar según tus elementos */
+
+.header-info h1,
+.header-info p {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+#toggle-darkmode {
+  background-color: #121212;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+#cerrar-sesion {
+  background-color: white;
+  color: #333;
+  border: 1px solid #333;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#cerrar-sesion:hover {
+  background-color: #ddd;
+}
+
+
+@media (max-width: 500px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .header-actions button {
+    width: auto;
+  }
+}

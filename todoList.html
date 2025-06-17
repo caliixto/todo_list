@@ -5,14 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mi Panel</title>
   <link rel="stylesheet" href="todo-list.css">
-  <button id="toggle-darkmode">🌙</button>
+  <link rel="stylesheet" href="./responsive.css">
 </head>
 <body>
-  <header>
+  <header class="header-container">
+  <div class="header-info">
     <h1>Bienvenido, <span id="usuario-nombre"></span></h1>
     <p>Ciudad: <span id="ciudad"></span> | Día: <span id="dia-semana"></span></p>
-    <button id="cerrar-sesion" style="float:right">Cerrar sesión</button>
-  </header>
+  </div>
+  <div class="header-actions">
+    <button id="toggle-darkmode">🌙</button>
+    <button id="cerrar-sesion">Cerrar sesión</button>
+  </div>
+</header>
+
 
   <main>
     <section class="calendario">
